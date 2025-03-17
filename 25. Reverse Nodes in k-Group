@@ -1,0 +1,33 @@
+class Solution:
+    def reverseKGroup(self, head, k):
+        dummy = ListNode(0)
+        dummy.next = head
+        prev_group = dummy
+
+        while True:
+            # 確認是否有 k 個節點
+            kth = self.getKth(prev_group, k)
+            if not kth:
+                break  # 如果不滿 k 個，則不反轉
+
+            next_group = kth.next  # 記錄下一組的開頭
+            # 反轉 k 個節點
+            prev, curr = kth.next, prev_group.next
+            while curr != next_group:
+                temp = curr.next
+                curr.next = prev
+                prev = curr
+                curr = temp
+            
+            # 連接反轉後的部分
+            temp = prev_group.next
+            prev_group.next = kth
+            prev_group = temp  # 移動 prev_group 指向新的結束節點
+
+        return dummy.next
+
+    def getKth(self, node, k):
+        while node and k > 0:
+            node = node.next
+            k -= 1
+        return node
